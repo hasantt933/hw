@@ -1,10 +1,13 @@
 "use client"
 import { FileClock, Home, Settings, WalletCards } from 'lucide-react'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import React, { useEffect } from 'react'
+import UsageTrack from './UsageTrack'
 
 function SideNav() {
+
+         const router = useRouter();  // ✅ Add useRouter
 
         const MenuList = [
             {
@@ -25,7 +28,7 @@ function SideNav() {
             {
                 name: 'Setting',
                 icon: Settings,
-                path: '/dashboard/setting',
+                path: '/dashboard/settings',
             }
 
         ]
@@ -36,7 +39,7 @@ function SideNav() {
         }, [])
 
   return (
-    <div className='h-screen p-5 shadow-sm border bg-white'>
+    <div className='h-screen relative p-5 shadow-sm border bg-white'>
         <div className='flex justify-center'>
         <Image src={'/logo.svg'} alt='logo' width={100} height={100} />
         </div>
@@ -46,11 +49,16 @@ function SideNav() {
                  <div key= {index} className={`flex gap-2 mb-2 p-3
                     hover:bg-primary hover:text-white rounded-lg cursor-pointer
                     ${path == menu.path ? 'bg-primary text-white' : ''}
-                    `}>
+                    `}
+                    onClick={() => router.push(menu.path)}
+                    >
                     <menu.icon/>
                     <h2>{menu.name}</h2>
                 </div>
             ))}
+        </div>
+        <div className='absolute bottom-10 left-0 w-full'>
+            <UsageTrack/>
         </div>
     </div>
   )

@@ -10,10 +10,13 @@ interface props{
 }
 
 function OutputSection({aiOutput}:props) {
-  const editorRef:any=useRef();
+  // const editorRef:any=useRef();
+  const editorRef = useRef<Editor | null>(null);
 
   useEffect(()=>{
-      const editorInstance=editorRef.current.getInstance();
+      // const editorInstance=editorRef.current.getInstance();
+      const editorInstance = editorRef.current?.getInstance();
+
       editorInstance.setMarkdown(aiOutput);
   },[aiOutput])
 
@@ -21,7 +24,9 @@ function OutputSection({aiOutput}:props) {
     <div className='bg-white shadow-lg border rounded-lg'>
       <div className='flex justify-between items-center p-5'>
         <h2 className='font-medium text-lg'>Your Result</h2>
-        <Button className='flex gap-2'><Copy className='w-4 h-4'/>Copy</Button>
+        <Button className='flex gap-2'
+        onClick={()=> navigator.clipboard.writeText(aiOutput)}
+        ><Copy className='w-4 h-4'/>Copy</Button>
       </div>
       <Editor
       ref={editorRef}
@@ -29,7 +34,8 @@ function OutputSection({aiOutput}:props) {
     height="600px"
     initialEditType="wysiwyg"
     useCommandShortcut={true}
-    onChange={()=>console.log(editorRef.current.getInstance().getMarkdown())}
+    // onChange={()=>console.log(editorRef.current.getInstance().getMarkdown())}
+    onChange={() => console.log(editorRef.current?.getInstance()?.getMarkdown())}
      />
     </div>
   )

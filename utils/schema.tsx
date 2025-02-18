@@ -1,6 +1,6 @@
 import { pgTable, serial, text, varchar } from "drizzle-orm/pg-core";
 
-export const aiOutput= pgTable('aiOutput', {
+export const AIOutput= pgTable('AIOutput', {
     id:serial('id').primaryKey(),
     formData:varchar('formData').notNull(),
     aiResponse:text('aiResponse'),
