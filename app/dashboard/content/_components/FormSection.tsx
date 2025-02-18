@@ -14,6 +14,7 @@ interface PROPS{
     userFormInput:any
     loading:boolean
 }
+  
 
 function FormSection({selectedTemplate, userFormInput, loading}:PROPS) {
 
@@ -37,7 +38,7 @@ function FormSection({selectedTemplate, userFormInput, loading}:PROPS) {
         <p className='text-gray-500 text-sm'>{selectedTemplate?.desc}</p>
 
         <form className='mt-6' onSubmit={onSubmit}>
-            {selectedTemplate?.form?.map((item,index)=>(
+         {selectedTemplate?.form?.map((item,index)=>(
                 <div key={item.id || index} className='my-2 flex flex-col gap-2 mb-7'>
                     <label className='font-bold'>{item.label}</label>
                     {item.field=='input'?
@@ -47,6 +48,7 @@ function FormSection({selectedTemplate, userFormInput, loading}:PROPS) {
                     }
                 </div>
             ))}
+
             <Button type='submit' className='w-full py-6' disabled={loading}>
                {loading&&<Loader2Icon className='animate-spin' />}
                 Get Answer

@@ -3,6 +3,7 @@ import React from 'react'
 import TemplateCard from './TemplateCard'
 
 export interface TEMPLATE{
+   id?: string; // Marking `id` as optional since it's missing in some cases
     name:string,
     desc:string,
     icon:string,
@@ -11,6 +12,7 @@ export interface TEMPLATE{
     aiPrompt:string,
     form?:FORM[]
 }
+
 
 export interface FORM{
     label:string,
