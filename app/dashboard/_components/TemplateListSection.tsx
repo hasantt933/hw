@@ -15,6 +15,7 @@ export interface TEMPLATE{
 
 
 export interface FORM{
+  id?: string;  // Add this line
     label:string,
     field:string,
     name:string,
