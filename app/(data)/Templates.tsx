@@ -1,6 +1,6 @@
 export default  [
-    {
-        name:'General Bot',
+   /* {
+        name:'General maBot',
         desc:'An AI tool that generate blog title depends on yout blog information',
         category:'Blog',
         icon:'https://cdn-icons-png.flaticon.com/128/4186/4186534.png',
@@ -262,7 +262,26 @@ export default  [
             },
            
         ]
+    }, */
+    {
+        name: 'General Bot',
+        desc: 'Your Homework Helper',
+        icon:'https://cdn-icons-png.flaticon.com/128/8488/8488751.png',
+        category: 'General',
+       
+        slug: 'general-bot',
+        aiPrompt: 'You are a helpful Homework assistant for students.',
+        form: [
+            {
+                label: 'Enter your homework questions',
+                field: 'textarea',
+                name: 'problemDescription',
+                required:true
+            },
+           
+        ]
     },
+
     {
         name: 'Explain Code',
         desc: 'AI Model to explain programming code in any language',
@@ -281,73 +300,6 @@ export default  [
            
         ]
     },
-    {
-        name: 'Code Bug Detector',
-        desc: 'This tool analyzes your input, like error messages and code snippets, to pinpoint and fix bugs, offering detailed solutions and alternatives in a straightforward, user-friendly way.',
-        icon:'https://cdn-icons-png.flaticon.com/128/4426/4426267.png',
-        category: 'code-bug-detector',
-       
-        slug: 'code-bug-detector',
-        aiPrompt: 'Depends on user codeInput find bug in code and give solution and give output in  in rich text editor format in code block ',
-        form: [
-            {
-                label: 'Enter code which you want to test bug',
-                field: 'textarea',
-                name: 'codeInput',
-                required:true
-            },
-           
-        ]
-    },
-    {
-        name: 'Tagline Generator',
-        desc: 'Struggling to find the perfect tagline for your brand? Let our AI-tool assist you in creating a tagline that stands out.',
-        icon:'https://cdn-icons-png.flaticon.com/128/2178/2178616.png',
-        category: 'Marketting',
-       
-        slug: 'tagline-generator',
-        aiPrompt: 'Depends on user productName and outline generate catchy 5-10 tagline for the business product and give output  in rich text editor format ',
-        form: [
-            {
-                label: 'Product/Brand Name',
-                field: 'input',
-                name: 'productName',
-                required:true
-            },
-            {
-                label: 'What you are selling / Marketting',
-                field: 'textarea',
-                name: 'outline',
-                required:true
-            },
-           
-        ]
-    },
-    {
-        name: 'Product Description',
-        desc: 'This is your AI-powered SEO expert, creating captivating and keyword-rich e-commerce product descriptions to boost your online sales.',
-        icon:'https://cdn-icons-png.flaticon.com/128/679/679922.png',
-        category: 'Marketting',
-       
-        slug: 'product-description',
-        aiPrompt: 'Depends on user productName and description generate small description for product for e-commer business give output  in rich text editor format  ',
-        form: [
-            {
-                label: 'Product Name',
-                field: 'input',
-                name: 'productName',
-                required:true
-            },
-            {
-                label: 'Product Details',
-                field: 'textarea',
-                name: 'outline',
-                required:true
-            },
-           
-        ]
-    },
-
-
+      
 
 ]

@@ -33,12 +33,16 @@ function UsageTrack() {
             GetTotalUsage(result)
     }
 
-    const GetTotalUsage=(result:HISTORY[])=>{
+    const GetTotalUsage = (result:HISTORY[]) => {
+        let total = result.length; // Each successful response counts as 1 token
+        setTotalUsage(total);
+        console.log(total);
+    };
+    
+
+  /*  const GetTotalUsage=(result:HISTORY[])=>{
         let total:number=0;
-        /*result.forEach(element=>{
-            //total=total+Number(element.aiResponse?.length)
-            total += element.aiResponse.trim().split(/\s+/).length;
-        });*/
+       
         result.forEach(element => {
             if (element.aiResponse && typeof element.aiResponse === "string") {
                 total += element.aiResponse.trim().split(/\s+/).length; // Count words correctly
@@ -46,7 +50,8 @@ function UsageTrack() {
         });
         setTotalUsage(total)
         console.log(total);
-    }
+    } */
+    
 
   return (
     <div className='p-5'>
@@ -59,7 +64,7 @@ function UsageTrack() {
                 }}>
                 </div>
             </div>
-            <h2 className='text-sm my-2'>{totalUsage}/10,000 Credit Used</h2>
+            <h2 className='text-sm my-2'>{totalUsage}/10,000 Credits Used</h2>
         </div>
         <Button variant={'secondary'} className='w-full my-3 text-purple-600'>
                 Upgrade
