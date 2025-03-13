@@ -1,3 +1,4 @@
+// app/api/create-subscription/route.ts
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -27,8 +28,11 @@ export async function POST(req: Request) {
       payment_method_types: ["card"],
       mode: "subscription",
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/billing?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/billing`,
+      metadata: {
+        plan: body.selectedPlan // Store the plan in metadata for reference
+      }
     });
 
     return NextResponse.json({ sessionId: session.id }, { status: 200 });

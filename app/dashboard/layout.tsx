@@ -4,6 +4,7 @@ import SideNav from './_components/SideNav';
 import Header from './_components/Header';
 import { TotalUsageContext } from '../(context)/TotalUsageContext'
 import { UpdateCreditUsageContext } from '../(context)/UpdateCreditUsageContext'
+import { UserSubscriptionContext } from '../(context)/UserSubscriptionContext';
 
 
 function layout({
@@ -13,11 +14,13 @@ function layout({
   }>) {
 
     const [totalUsage, setTotalUsage]=useState<number>(0);
+    const [userSubscription, setUserSubscription] = useState<boolean>(false);
     const [updateCreditUsage, setUpdateCreditUsage] = useState<any>();
 
   return (
 
     <TotalUsageContext.Provider value={{totalUsage, setTotalUsage}}>
+      <UserSubscriptionContext.Provider value= {{userSubscription, setUserSubscription}}>
      <UpdateCreditUsageContext.Provider value={{updateCreditUsage, setUpdateCreditUsage}}> 
 
     <div className='bg-state-100 h-screen'>
@@ -30,6 +33,7 @@ function layout({
         </div>
     </div>
     </UpdateCreditUsageContext.Provider>
+    </UserSubscriptionContext.Provider>
     </TotalUsageContext.Provider>
   )
 }
