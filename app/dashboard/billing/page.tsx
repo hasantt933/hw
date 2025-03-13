@@ -1,15 +1,15 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import axios from "axios";
 import { Loader2Icon } from "lucide-react";
 import { loadStripe } from "@stripe/stripe-js";
 import { useUser } from "@clerk/nextjs";
 import { useSearchParams } from "next/navigation";
 
-const BillingPage = () => {
+// Create a separate component to use search params
+function PaymentProcessor() {
   const [loading, setLoading] = useState(false);
   const [processingPayment, setProcessingPayment] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<"monthly" | "yearly">("monthly");
   const { user, isLoaded: isUserLoaded } = useUser();
   const searchParams = useSearchParams();
   
@@ -106,6 +106,32 @@ const BillingPage = () => {
     }
   };
 
+  if (processingPayment) {
+    return (
+      <div className="text-center py-10">
+        <Loader2Icon className="animate-spin mx-auto h-10 w-10 text-purple-600" />
+        <p className="mt-4 text-xl">Processing your payment...</p>
+        <p className="text-gray-500">Please wait while we confirm your subscription</p>
+      </div>
+    );
+  }
+
+  return null;
+}
+
+// Loading fallback component
+function LoadingFallback() {
+  return (
+    <div className="flex justify-center items-center p-10">
+      <Loader2Icon className="animate-spin h-10 w-10 text-purple-600" />
+    </div>
+  );
+}
+
+const BillingPage = () => {
+  const [loading, setLoading] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<"monthly" | "yearly">("monthly");
+  
   // Create a Stripe checkout session
   const createSubscription = async (e: React.MouseEvent, plan: "monthly" | "yearly") => {
     e.stopPropagation(); // Prevent event bubbling to parent div
@@ -142,68 +168,63 @@ const BillingPage = () => {
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <script src="https://js.stripe.com/v3/"></script>
       <div className="w-full max-w-4xl p-6 bg-white rounded-lg shadow-lg">
-        {processingPayment ? (
-          <div className="text-center py-10">
-            <Loader2Icon className="animate-spin mx-auto h-10 w-10 text-purple-600" />
-            <p className="mt-4 text-xl">Processing your payment...</p>
-            <p className="text-gray-500">Please wait while we confirm your subscription</p>
+        {/* Wrap the component that uses useSearchParams in Suspense */}
+        <Suspense fallback={<LoadingFallback />}>
+          <PaymentProcessor />
+        </Suspense>
+        
+        <h2 className="text-2xl font-semibold text-center mb-6">Upgrade Your Plan</h2>
+        <div className="flex gap-6 justify-center">
+          {/* Monthly Plan */}
+          <div
+            className={`border-4 p-6 rounded-lg cursor-pointer w-64 text-center transition-all ${
+              selectedPlan === "monthly" ? "border-purple-600" : "border-gray-300"
+            }`}
+            onClick={() => setSelectedPlan("monthly")}
+          >
+            <h3 className="text-xl font-bold">Monthly</h3>
+            <p className="text-2xl font-semibold">$9.99 /month</p>
+            <ul className="mt-3 text-sm space-y-1">
+              <li>✅ 10,000 Words/Month</li>
+              <li>✅ 50+ Content Templates</li>
+              <li>✅ Unlimited Download & Copy</li>
+              <li>✅ 1 Month of History</li>
+            </ul>
+            <button
+              disabled={loading}
+              onClick={(e) => createSubscription(e, "monthly")}
+              className="mt-4 px-4 py-2 rounded-lg text-white bg-purple-600 flex items-center justify-center"
+            >
+              {loading && selectedPlan === "monthly" && <Loader2Icon className="animate-spin mr-2" />} 
+              Get Started
+            </button>
           </div>
-        ) : (
-          <>
-            <h2 className="text-2xl font-semibold text-center mb-6">Upgrade Your Plan</h2>
-            <div className="flex gap-6 justify-center">
-              {/* Monthly Plan */}
-              <div
-                className={`border-4 p-6 rounded-lg cursor-pointer w-64 text-center transition-all ${
-                  selectedPlan === "monthly" ? "border-purple-600" : "border-gray-300"
-                }`}
-                onClick={() => setSelectedPlan("monthly")}
-              >
-                <h3 className="text-xl font-bold">Monthly</h3>
-                <p className="text-2xl font-semibold">$9.99 /month</p>
-                <ul className="mt-3 text-sm space-y-1">
-                  <li>✅ 10,000 Words/Month</li>
-                  <li>✅ 50+ Content Templates</li>
-                  <li>✅ Unlimited Download & Copy</li>
-                  <li>✅ 1 Month of History</li>
-                </ul>
-                <button
-                  disabled={loading}
-                  onClick={(e) => createSubscription(e, "monthly")}
-                  className="mt-4 px-4 py-2 rounded-lg text-white bg-purple-600 flex items-center justify-center"
-                >
-                  {loading && selectedPlan === "monthly" && <Loader2Icon className="animate-spin mr-2" />} 
-                  Get Started
-                </button>
-              </div>
 
-              {/* Yearly Plan */}
-              <div
-                className={`border-4 p-6 rounded-lg cursor-pointer w-64 text-center transition-all ${
-                  selectedPlan === "yearly" ? "border-purple-600" : "border-gray-300"
-                }`}
-                onClick={() => setSelectedPlan("yearly")}
-              >
-                <h3 className="text-xl font-bold">Yearly</h3>
-                <p className="text-2xl font-semibold">$39.99 /year</p>
-                <ul className="mt-3 text-sm space-y-1">
-                  <li>✅ 100,000 Words/Month</li>
-                  <li>✅ 50+ Template Access</li>
-                  <li>✅ Unlimited Download & Copy</li>
-                  <li>✅ 1 Year of History</li>
-                </ul>
-                <button
-                  disabled={loading}
-                  onClick={(e) => createSubscription(e, "yearly")}
-                  className="mt-4 px-4 py-2 rounded-lg text-white bg-purple-600 flex items-center justify-center"
-                >
-                  {loading && selectedPlan === "yearly" && <Loader2Icon className="animate-spin mr-2" />} 
-                  Get Started
-                </button>
-              </div>
-            </div>
-          </>
-        )}
+          {/* Yearly Plan */}
+          <div
+            className={`border-4 p-6 rounded-lg cursor-pointer w-64 text-center transition-all ${
+              selectedPlan === "yearly" ? "border-purple-600" : "border-gray-300"
+            }`}
+            onClick={() => setSelectedPlan("yearly")}
+          >
+            <h3 className="text-xl font-bold">Yearly</h3>
+            <p className="text-2xl font-semibold">$39.99 /year</p>
+            <ul className="mt-3 text-sm space-y-1">
+              <li>✅ 100,000 Words/Month</li>
+              <li>✅ 50+ Template Access</li>
+              <li>✅ Unlimited Download & Copy</li>
+              <li>✅ 1 Year of History</li>
+            </ul>
+            <button
+              disabled={loading}
+              onClick={(e) => createSubscription(e, "yearly")}
+              className="mt-4 px-4 py-2 rounded-lg text-white bg-purple-600 flex items-center justify-center"
+            >
+              {loading && selectedPlan === "yearly" && <Loader2Icon className="animate-spin mr-2" />} 
+              Get Started
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
