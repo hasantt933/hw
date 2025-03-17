@@ -16,7 +16,6 @@ import { UpdateCreditUsageContext } from '@/app/(context)/UpdateCreditUsageConte
 import { Textarea } from '@/components/ui/textarea';
 import Image from 'next/image';
 import { Loader2Icon } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
 
 function CreateNewContent() {
   const params = useParams();
@@ -29,7 +28,6 @@ function CreateNewContent() {
   const [newMessage, setNewMessage] = useState('');
   const [hasStartedChat, setHasStartedChat] = useState(false);
   const [formData, setFormData] = useState<any>({});
-  const [processingResponse, setProcessingResponse] = useState(false);
   
   const { user } = useUser();
   const router = useRouter();
@@ -124,6 +122,25 @@ function CreateNewContent() {
     }
   };
 
+  // Simple function to format text with basic markdown-like elements
+  const formatAIMessage = (content: string) => {
+    // First, replace double line breaks with paragraph tags
+    let formatted = content.split('\n\n').map(para => `<p>${para}</p>`).join('');
+    
+    // Replace single line breaks with <br> tags
+    formatted = formatted.replace(/\n/g, '<br>');
+    
+    // Bold text (** **)
+    formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    // Italic text (* *)
+    formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    
+    return (
+      <div dangerouslySetInnerHTML={{ __html: formatted }} className="prose max-w-none" />
+    );
+  };
+
   return (
     <div className="flex flex-col h-screen">
       <div className="p-5 border-b flex-shrink-0">
@@ -216,8 +233,8 @@ function CreateNewContent() {
                           </div>
                           <div className="flex-grow">
                             <div className="font-medium mb-1">{selectedTemplate?.name || "AI Assistant"}</div>
-                            <div className="p-4 bg-white rounded-lg shadow-sm prose max-w-none">
-                              <ReactMarkdown>{msg.content}</ReactMarkdown>
+                            <div className="p-4 bg-white rounded-lg shadow-sm">
+                              {formatAIMessage(msg.content)}
                             </div>
                           </div>
                         </>
